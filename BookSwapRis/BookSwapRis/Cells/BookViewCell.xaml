@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ViewCell   xmlns="http://xamarin.com/schemas/2014/forms" 
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+            xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+            xmlns:skia ="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+            mc:Ignorable="d"
+            x:Class="BookSwapRis.Cells.BookViewCell">
+  <ViewCell.View>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <skia:SKCanvasView
+                x:Name="XAML_CanvasView"
+                Grid.ColumnSpan="2"
+                Grid.RowSpan="2"
+                HorizontalOptions="Fill"
+                VerticalOptions="Fill"
+                PaintSurface="SKCanvasView_PaintSurface"/>
+
+            <StackLayout
+                            Margin="25,30,0,0"
+                            VerticalOptions="Center">
+                <Label Text="{Binding Title}"
+                                    Style="{StaticResource BookTitle}"
+                                    TextColor="{Binding Colors.TitleColor}"/>
+                <Label Text="{Binding Author}"
+                                    Style="{StaticResource Author}"
+                                    TextColor="{Binding Colors.TitleColor}"/>
+            </StackLayout>
+
+            <StackLayout
+                            Grid.Row="1"
+                            Margin="25,15"
+                            HorizontalOptions="Start"
+                            Orientation="Horizontal"
+                            Spacing="10"
+                            VerticalOptions="Center">
+                <pancake:PancakeView
+                                    BorderColor="Transparent"
+                                    BorderThickness="1.5"
+                                    CornerRadius="18"
+                                    Elevation="0"
+                                HeightRequest="36"
+                                        WidthRequest="36" 
+                                    HasShadow="True">
+                    <Image
+                                        HeightRequest="36"
+                                        WidthRequest="36" 
+                                        
+                                        HorizontalOptions="Start"
+                                        Source="{Binding CoverImage}"
+                                        VerticalOptions="Start"
+                                    />
+                </pancake:PancakeView>
+
+                <Label
+                                    Style="{StaticResource User}"
+                                    Text="{Binding UserName}"
+                                    TextColor="{Binding Colors.AccentTextColor}"
+                                    VerticalOptions="Center" />
+            </StackLayout>
+
+
+            <pancake:PancakeView
+                            Grid.Column="1"
+                            Grid.RowSpan="2"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            Margin="15"
+                            HasShadow="True"
+                            >
+
+                <Image
+                            Source="{Binding CoverImage}"
+                                HorizontalOptions="Fill"
+                                Aspect="AspectFit"
+                            />
+            </pancake:PancakeView>
+
+        </Grid>
+    </ViewCell.View>
+</ViewCell>

@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:VM ="clr-namespace:BookSwapRis.ViewModel"
+             xmlns:rainbows="clr-namespace:Xamarin.Forms.DebugRainbows;assembly=Xamarin.Forms.DebugRainbows"             
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+             xmlns:cells="clr-namespace:BookSwapRis.Cells"
+             mc:Ignorable="d"
+             x:Class="BookSwapRis.MainPage"
+             rainbows:DebugRainbow.IsDebug="False"
+             Title="Books Ris"
+             >
+
+    <ContentPage.BindingContext>
+        <VM:BooksViewModel/>
+    </ContentPage.BindingContext>
+
+    <NavigationPage.TitleView>
+        <SearchBar Placeholder="Book Name"
+                   Text="{Binding TextSearchBar, Mode=TwoWay}"
+                       SearchCommand="{Binding SearchBarCommand}"
+                       SearchCommandParameter="{Binding TextSearchBar}"
+                   >
+
+        </SearchBar>
+    </NavigationPage.TitleView>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="preferences"/>
+        <ToolbarItem IconImageSource="search" Command="{Binding RefreshCommand}"/>
+    </ContentPage.ToolbarItems>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"/>
+
+        <Grid
+            IsVisible="{Binding IsNotBusy}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            
+            <skia:SKCanvasView Grid.ColumnSpan="3" PaintSurface="SKCanvasView_PaintSurface"/>
+            
+            
+            <pancake:PancakeView
+                Margin="10"
+                Elevation="20"
+                HasShadow="True"
+                >
+                <Image Source="{Binding SwapFromBook.CoverImage}"
+                       />
+
+            </pancake:PancakeView>
+
+            <StackLayout
+                Grid.Column="1"
+                Margin="5,0,0,0"
+                VerticalOptions="Center">
+                <Label 
+                    Text="Your Book"
+                    Style="{StaticResource SwapUser}"
+                    TextColor="{Binding SwapFromBook.Colors.AccentTextColor}"/>
+                <Label
+                    Text="{Binding SwapFromBook.Title}"
+                    Style="{StaticResource SwapBookTitle}"
+                    TextColor="{Binding SwapFromBook.Colors.TitleColor}"/>
+                <Label
+                    Text="{Binding SwapFromBook.Author}"
+                    TextColor="{Binding SwapFromBook.Colors.TitleColor}"
+                    Style="{StaticResource Author}"
+                    />
+            </StackLayout>
+
+            <Image
+                Grid.Column="2"
+                Source="pencil"
+                VerticalOptions="Center"
+                Margin="20,0"/>
+        </Grid>
+        
+
+        <ListView
+            x:Name="XAML_listview"
+            Grid.Row="1"
+            CachingStrategy="RecycleElement"
+            RowHeight="200"
+            SeparatorVisibility="None"
+            ItemsSource="{Binding Books}"
+            IsVisible="{Binding IsNotBusy}"
+            IsPullToRefreshEnabled="True"
+            IsRefreshing="{Binding IsBusy}"
+            RefreshCommand="{Binding RefreshCommand}"
+            SelectedItem="{Binding SelectedBook}"
+            >
+            <ListView.GestureRecognizers>
+                <ChildGestureRecognizer>
+                    <ChildGestureRecognizer.GestureRecognizer>
+                        <TapGestureRecognizer Command="{Binding ItemListViewTappedeCommand}" CommandParameter="{Binding SelectedBook}"/>
+                    </ChildGestureRecognizer.GestureRecognizer>
+                </ChildGestureRecognizer>
+            </ListView.GestureRecognizers>
+            
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <cells:BookViewCell/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+
+
+</ContentPage>
