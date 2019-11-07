@@ -3,13 +3,99 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:SharedTranstion="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
+             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              mc:Ignorable="d"
              x:Class="BookSwapRis.Views.BookSwapDetail">
+
+    <NavigationPage.TitleView>
+        <Label
+            Margin="-50,0,0,0"
+            FontAttributes="Bold"
+            FontSize="20"
+            HorizontalOptions="Center"
+            Text="Match"
+            TextColor="Black"
+            VerticalOptions="Center" />
+    </NavigationPage.TitleView>
+    
+    
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <!--  swap from book  -->
+        <Grid Margin="10,0,10,0" VerticalOptions="Start">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="AUTO" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="AUTO" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <BoxView
+                    x:Name="BookBorderBoxView"
+                    Grid.RowSpan="2"
+                    HeightRequest="218"
+                    HorizontalOptions="Center"
+                    Opacity=".5"
+                    VerticalOptions="Center"
+                    WidthRequest="153"
+                    Color="{Binding SwapFromBook.Colors.TitleColor}" />
+            <Image
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Grid.Column="0"
+                    SharedTranstion:Transition.Name="fromCoverImage"
+                    Aspect="AspectFit"
+                    HeightRequest="198"
+                    HorizontalOptions="Center"
+                    Source="{Binding SwapFromBook.CoverImage}"
+                    VerticalOptions="Center"
+                    WidthRequest="133" />
+
+            <StackLayout Grid.Column="1" Margin="10,10,0,0">
+                <Label
+                        Opacity="0"
+                        Style="{StaticResource BookTitle}"
+                        SharedTranstion:Transition.Name="fromTitle"
+                        Text="{Binding SwapFromBook.Title}"
+                        TextColor="{Binding SwapFromBook.Colors.TitleColor}"
+                        TranslationY="50" />
+                <Label
+                        x:Name="FromAuthorLabel"
+                        Opacity="0"
+                        Style="{StaticResource Author}"
+                    SharedTranstion:Transition.Name="fromAuthor"
+                        Text="{Binding SwapFromBook.Author}"
+                        TextColor="{Binding SwapFromBook.Colors.TitleColor}"
+                        TranslationY="50" />
+            </StackLayout>
+
+            <Grid
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="0,0,0,30"
+                    VerticalOptions="End">
+
+                <pancake:PancakeView
+                        x:Name="DescriptionBackground"
+                        Elevation="2"
+                        HasShadow="True"
+                        Opacity=".5">
+                    <BoxView Color="White" />
+                </pancake:PancakeView>
+
+
+                <Label
+                        x:Name="DescriptionText"
+                        Margin="10"
+                        FontSize="14"
+                        LineBreakMode="TailTruncation"
+                        MaxLines="4"
+                        Style="{StaticResource Author}"
+                        Text="{Binding SwapFromBook.Description}"
+                        VerticalOptions="Center" />
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

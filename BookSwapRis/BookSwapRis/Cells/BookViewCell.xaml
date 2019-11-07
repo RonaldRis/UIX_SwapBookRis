@@ -5,8 +5,10 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
             xmlns:skia ="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
+            xmlns:SharedTranstion="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
             mc:Ignorable="d"
             x:Class="BookSwapRis.Cells.BookViewCell">
+    
   <ViewCell.View>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -31,11 +33,15 @@
                             Margin="25,30,0,0"
                             VerticalOptions="Center">
                 <Label Text="{Binding Title}"
-                                    Style="{StaticResource BookTitle}"
-                                    TextColor="{Binding Colors.TitleColor}"/>
+                        Style="{StaticResource BookTitle}"
+                       SharedTranstion:Transition.Group="{Binding Title}"
+                       SharedTranstion:Transition.Name="toTitle"
+                        TextColor="{Binding Colors.TitleColor}"/>
                 <Label Text="{Binding Author}"
-                                    Style="{StaticResource Author}"
-                                    TextColor="{Binding Colors.TitleColor}"/>
+                        Style="{StaticResource Author}"
+                       SharedTranstion:Transition.Group="{Binding Title}"
+                       SharedTranstion:Transition.Name="toAuthor"
+                        TextColor="{Binding Colors.TitleColor}"/>
             </StackLayout>
 
             <StackLayout
@@ -54,12 +60,13 @@
                                         WidthRequest="36" 
                                     HasShadow="True">
                     <Image
-                                        HeightRequest="36"
-                                        WidthRequest="36" 
-                                        
-                                        HorizontalOptions="Start"
-                                        Source="{Binding CoverImage}"
-                                        VerticalOptions="Start"
+                        HeightRequest="36"
+                        WidthRequest="36" 
+                        SharedTranstion:Transition.Group="{Binding Title}"
+                        SharedTranstion:Transition.Name="toCoverImage"
+                        HorizontalOptions="Start"
+                        Source="{Binding CoverImage}"
+                        VerticalOptions="Start"
                                     />
                 </pancake:PancakeView>
 

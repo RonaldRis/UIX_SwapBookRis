@@ -17,16 +17,7 @@ namespace BookSwapRis.Views
         public BookSwapDetail()
         {
             InitializeComponent();
-        }
-        public BookSwapDetail(Book item)
-        {
-            InitializeComponent();
-        }
-
-        public BookSwapDetail(BookSwapDetailVM vm)
-        {
-            InitializeComponent();
-
+            BindingContext = App.mainBooksViewModel;
         }
     }
 }

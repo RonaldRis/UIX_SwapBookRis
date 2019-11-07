@@ -8,15 +8,16 @@
              xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:skia="clr-namespace:SkiaSharp.Views.Forms;assembly=SkiaSharp.Views.Forms"
              xmlns:cells="clr-namespace:BookSwapRis.Cells"
+             xmlns:SharedTranstion="clr-namespace:Plugin.SharedTransitions;assembly=Plugin.SharedTransitions"
+             
              mc:Ignorable="d"
              x:Class="BookSwapRis.MainPage"
              rainbows:DebugRainbow.IsDebug="False"
              Title="Books Ris"
+             
+             
              >
 
-    <ContentPage.BindingContext>
-        <VM:BooksViewModel/>
-    </ContentPage.BindingContext>
 
     <NavigationPage.TitleView>
         <SearchBar Placeholder="Book Name"
@@ -30,7 +31,7 @@
 
     <ContentPage.ToolbarItems>
         <ToolbarItem IconImageSource="preferences"/>
-        <ToolbarItem IconImageSource="search" Command="{Binding RefreshCommand}"/>
+        <ToolbarItem IconImageSource="search" Command="{Binding SearchBarCommand}"/>
     </ContentPage.ToolbarItems>
 
     <Grid>
@@ -60,6 +61,8 @@
                 HasShadow="True"
                 >
                 <Image Source="{Binding SwapFromBook.CoverImage}"
+                       SharedTranstion:Transition.Group="{Binding SelectedBook.Title}"
+                       SharedTranstion:Transition.Name="fromCoverImage"
                        />
 
             </pancake:PancakeView>
@@ -75,9 +78,13 @@
                 <Label
                     Text="{Binding SwapFromBook.Title}"
                     Style="{StaticResource SwapBookTitle}"
+                    SharedTranstion:Transition.Name="fromTitle"
+                    SharedTranstion:Transition.Group="{Binding SelectedBook.Title}"
                     TextColor="{Binding SwapFromBook.Colors.TitleColor}"/>
                 <Label
                     Text="{Binding SwapFromBook.Author}"
+                    SharedTranstion:Transition.Group="{Binding SelectedBook.Title}"
+                    SharedTranstion:Transition.Name="fromAuthor"
                     TextColor="{Binding SwapFromBook.Colors.TitleColor}"
                     Style="{StaticResource Author}"
                     />
@@ -103,11 +110,13 @@
             IsRefreshing="{Binding IsBusy}"
             RefreshCommand="{Binding RefreshCommand}"
             SelectedItem="{Binding SelectedBook}"
+             ItemTapped="XAML_listview_ItemTapped"
             >
+             
             <ListView.GestureRecognizers>
                 <ChildGestureRecognizer>
                     <ChildGestureRecognizer.GestureRecognizer>
-                        <TapGestureRecognizer Command="{Binding ItemListViewTappedeCommand}" CommandParameter="{Binding SelectedBook}"/>
+                        <TapGestureRecognizer Command="{Binding ItemListViewTappedeCommand}" /> <!--CommandParameter="{Binding SelectedBook}"-->
                     </ChildGestureRecognizer.GestureRecognizer>
                 </ChildGestureRecognizer>
             </ListView.GestureRecognizers>

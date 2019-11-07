@@ -7,28 +7,11 @@ using System.Diagnostics;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Plugin.SharedTransitions;
 
 namespace BookSwapRis.ViewModel
 {
 
-
-    public class linea : ObservableObject
-    {
-
-        private double _num;
-        private int _expo;
-        public double num
-        {
-            get => _num;
-            set => SetProperty(ref _num,value);
-        }
-
-        public int expo
-        {
-            get => _expo;
-            set => SetProperty(ref _expo, value);
-        }
-    }
 
 
     public class BooksViewModel : BaseViewModel
@@ -36,23 +19,26 @@ namespace BookSwapRis.ViewModel
         private Book _selectedBook;
 
 
-        ObservableCollection<linea> _Parejas;
-        public ObservableCollection<linea> Parejas
-        {
-            get { return _Parejas; }
-            set { SetProperty<ObservableCollection<linea>>(ref _Parejas, value); }
-        }
-
 
         string _textSearchBar;
+
         public string TextSearchBar
         {
             get { return _textSearchBar; }
-            set { SetProperty(ref _textSearchBar, value); }
+            set 
+            {
+                this.BuscarTitulo(value);
+                SetProperty(ref _textSearchBar, value); 
+            }
         }
     
-
-        public IList<Book> Books { get; set; }
+        private ObservableCollection<Book> _books;
+        private List<Book> _allBooks;
+        public ObservableCollection<Book> Books
+        {
+            get => _books;
+            set => SetProperty<ObservableCollection<Book>>(ref _books, value);
+        }
         public Book SwapFromBook { get; set; }
 
         public Book SelectedBook
@@ -93,7 +79,7 @@ namespace BookSwapRis.ViewModel
                 CoverImage = "book_extremelyloud",
             };
 
-            Books = new ObservableCollection<Book>()
+            _allBooks = new List<Book>()
             {
                 new Book()
                 {
@@ -157,28 +143,40 @@ namespace BookSwapRis.ViewModel
                     UserName = "DENYS BOLDYRIEV"
                 }
             };
+            IList<Book> filtro = new List<Book>();
+            _allBooks.ForEach(item => filtro.Add(item));
+            _allBooks.ForEach(item => filtro.Add(item));
+            _allBooks.ForEach(item => filtro.Add(item));
+            Books = new ObservableCollection<Book>(_allBooks);
 
             IsBusy = false;
         }
 
         #region Commands
 
-        public ICommand SearchBarCommand { get { return new Command<string>(CREARLISTA); } }
+        public ICommand SearchBarCommand { get { return new Command<string>(BuscarTitulo); } }
 
-        private void CREARLISTA(string cant)
+        private void BuscarTitulo(string titulo)
         {
-            var lista = new List<linea>();
-            for (int i = 0; i < Convert.ToInt32(cant); i++)
-            {
-                lista.Add(
-                        new linea
+            if (titulo == null)
+                return;
+            IList<Book> filtro = new List<Book>();
+            double result;
+            string BookTitle;
+            titulo = titulo.ToLower();
+            var stringcomparerDouble = new F23.StringSimilarity.JaroWinkler();
+            _allBooks.ForEach(
+                    (item) =>
+                    {
+                        BookTitle = item.Title.ToLower();
+                        result = stringcomparerDouble.Similarity(titulo,BookTitle);
+                        if (result>0.85 || BookTitle.Contains(titulo))
                         {
-                            expo = i
+                            filtro.Add(item);
                         }
-                    );
-            }
-            Parejas = new ObservableCollection<linea>(lista);
-
+                    }
+                );
+            Books = new ObservableCollection<Book>(filtro);
         }
 
         public ICommand RefreshCommand { get => new Command(LoadData); }
@@ -187,7 +185,9 @@ namespace BookSwapRis.ViewModel
 
         private void ItemListViewTapped(Book obj)
         {
-            App.Current.MainPage.Navigation.PushAsync(new BookSwapRis.Views.BookSwapDetail(obj));
+            var pantalla = new BookSwapRis.Views.BookSwapDetail();
+            SharedTransitionNavigationPage.SetBackgroundAnimation(pantalla, BackgroundAnimation.Flip);
+            App.Current.MainPage.Navigation.PushAsync(pantalla);
         }
 
 

@@ -1,4 +1,5 @@
 ﻿using BookSwapRis.Models;
+using Plugin.SharedTransitions;
 using SkiaSharp;
 using SkiaSharp.Views.Forms;
 using System;
@@ -23,6 +24,8 @@ namespace BookSwapRis
         public MainPage()
         {
             InitializeComponent();
+
+            BindingContext = BookSwapRis.App.mainBooksViewModel;
 
             /// XFUtils
             var eff = new XFUtils.Effects.ScrollReporterEffect();
@@ -98,5 +101,11 @@ namespace BookSwapRis
             Debug.Print( e.ToString());
         }
 
+        private void XAML_listview_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            var pantalla = new BookSwapRis.Views.BookSwapDetail();
+            SharedTransitionNavigationPage.SetBackgroundAnimation(pantalla, BackgroundAnimation.Flip);
+            App.Current.MainPage.Navigation.PushAsync(pantalla);
+        }
     }
 }
